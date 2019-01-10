@@ -1,0 +1,6 @@
+[Player4 & Player3] vs [Player2 & Player8]
+
+[Player12 & Player6] vs [Player5 & Player9]
+
+[Player11 & Player10] vs [Player7 & Player1]
+
