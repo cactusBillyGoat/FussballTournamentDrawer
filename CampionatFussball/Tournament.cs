@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace CampionatFussball
 {
@@ -29,6 +30,12 @@ namespace CampionatFussball
         /// <returns></returns>
         private List<Player> GetPlayers()
         {
+            if (!File.Exists(Utilities.InputFilePath))
+            {
+                MessageBox.Show($"Please first create {Utilities.InputFilePath} file", "Players file not found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new FileNotFoundException();
+            }
+
             var file_lines = File.ReadAllLines(Utilities.InputFilePath);
 
             var players_list = file_lines.Select(Line => Line.Split(' '))
