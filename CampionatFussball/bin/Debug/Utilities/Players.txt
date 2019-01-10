@@ -1,0 +1,12 @@
+Player1 Attack 
+Player2 Defend
+Player3 Attack
+Player4 Defend
+Player5 Defend
+Player6 Defend
+Player7 Defend
+Player8 Attack
+Player9 Attack
+Player10 Attack
+Player11 Defend
+Player12 Defend
