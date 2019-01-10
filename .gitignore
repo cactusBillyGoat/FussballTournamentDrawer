@@ -1,0 +1,6 @@
+
+*.ide-wal
+*.ide
+*.lock
+*.ide-shm
+.vs/CampionatFussball/v15/.suo
