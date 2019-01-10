@@ -1,0 +1,14 @@
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.exe.config
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.exe
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.pdb
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.csprojAssemblyReference.cache
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.csproj.CoreCompileInputs.cache
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.exe
+C:\Users\mihai_ciprian.tapu\source\repos\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.pdb
+D:\C#\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.exe.config
+D:\C#\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.exe
+D:\C#\CampionatFussball\CampionatFussball\bin\Debug\CampionatFussball.pdb
+D:\C#\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.csprojAssemblyReference.cache
+D:\C#\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.csproj.CoreCompileInputs.cache
+D:\C#\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.exe
+D:\C#\CampionatFussball\CampionatFussball\obj\Debug\CampionatFussball.pdb
