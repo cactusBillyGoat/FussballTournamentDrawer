@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CampionatFussball
+namespace Backend
 {
     public static class Utilities
     {

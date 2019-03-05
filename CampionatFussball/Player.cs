@@ -1,4 +1,4 @@
-﻿namespace CampionatFussball
+﻿namespace Backend
 {
     /// <summary>
     /// Player class

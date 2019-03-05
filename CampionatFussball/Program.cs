@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace CampionatFussball
+namespace Backend
 {
     public class Program
     {
