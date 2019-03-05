@@ -13,24 +13,50 @@ namespace Backend
     {
         #region Fields
 
-        private List<Team> mTeams = new List<Team>();
-        private List<Player> mPlayers;
+        public List<Team> Teams = new List<Team>();
+        public List<Player> Players = new List<Player>();
         private List<Player> mDefendingPlayers = new List<Player>();
         private List<Player> mAttackingPlayers = new List<Player>();
         private List<Player> mPolyvalentPlayers = new List<Player>();
 
         #endregion Fields
 
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has been drawed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has been drawed; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasBeenDrawed
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [teams have been drawed].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [teams have been drawed]; otherwise, <c>false</c>.
+        /// </value>
+        public bool TeamsHaveBeenDrawed
+        {
+            get;
+            set;
+        }
+
+        #endregion Properties
+
         /// <summary>
         /// Starts the tournament.
         /// </summary>
-        public void Start()
+        public void PopulateAndSufflePlayers()
         {
             PopulatePlayerList();
             PopulatePlayerPositionsLists();
             ShufflePlayers();
-            DrawTeams();
-            DrawTournament();
         }
 
         /// <summary>
@@ -48,7 +74,7 @@ namespace Backend
         /// </summary>
         private void PopulatePlayerPositionsLists()
         {
-            foreach (var player in mPlayers)
+            foreach (var player in Players)
             {
                 switch (player.PreferredPosition)
                 {
@@ -79,7 +105,7 @@ namespace Backend
 
             var file_lines = File.ReadAllLines(Utilities.InputFilePath);
 
-            mPlayers = file_lines.Select(Line => Line.Split(' '))
+            Players = file_lines.Select(Line => Line.Split(' '))
                 .Select(Values => new Player {NickName = Values[0], PreferredPosition = Values[1]})
                 .ToList();
         }
@@ -87,105 +113,114 @@ namespace Backend
         /// <summary>
         /// Draws the teams.
         /// </summary>
-        private void DrawTeams()
+        public void DrawTeams()
         {
-            if (mPolyvalentPlayers.Any())
+            try
             {
-                if (PlayersDifference < 0 && mPolyvalentPlayers.Any())
+                if (mPolyvalentPlayers.Any())
                 {
-                    var i = 0;
-                    while (PlayersDifference < 0)
+                    if (PlayersDifference < 0 && mPolyvalentPlayers.Any())
                     {
-                        mAttackingPlayers.Add(mPolyvalentPlayers[i]);
-                        mPolyvalentPlayers.RemoveAt(i);
-                        i++;
+                        var i = 0;
+                        while (PlayersDifference < 0)
+                        {
+                            mAttackingPlayers.Add(mPolyvalentPlayers[i]);
+                            mPolyvalentPlayers.RemoveAt(i);
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        var i = 0;
+                        while (PlayersDifference > 0 && mPolyvalentPlayers.Any())
+                        {
+                            mAttackingPlayers.Add(mPolyvalentPlayers[i]);
+                            mPolyvalentPlayers.RemoveAt(i);
+                            i++;
+                        }
+                    }
+
+                    if (mPolyvalentPlayers.Any() && PlayersDifference == 0)
+                    {
+                        var i = 0;
+                        while (mPolyvalentPlayers.Any())
+                        {
+                            if (i % 2 == 0)
+                            {
+                                mAttackingPlayers.Add(mPolyvalentPlayers[0]);
+                            }
+                            else
+                            {
+                                mDefendingPlayers.Add(mPolyvalentPlayers[0]);
+                            }
+
+                            mPolyvalentPlayers.RemoveAt(0);
+                            i++;
+                        }
+                    }
+                }
+
+                for (var i = 0; i < Math.Min(mDefendingPlayers.Count, mAttackingPlayers.Count); i++)
+                {
+                    Teams.Add(new Team
+                    {
+                        mFirstPlayer = mDefendingPlayers[i],
+                        mSecondPlayer = mAttackingPlayers[i],
+                    });
+                }
+
+                if (PlayersDifference == 0)
+                {
+                    return;
+                }
+
+                if (PlayersDifference > 0)
+                {
+                    if (PlayersDifference % 2 != 0)
+                    {
+                        mAttackingPlayers.Add(mAttackingPlayers[new Random().Next(0, mAttackingPlayers.Count - 1)]);
+                    }
+
+                    for (var i = mAttackingPlayers.Count - PlayersDifference; i < mAttackingPlayers.Count - 1; i += 2)
+                    {
+                        Teams.Add(new Team
+                        {
+                            mFirstPlayer = mAttackingPlayers[i],
+                            mSecondPlayer = mAttackingPlayers[i + 1],
+                        });
                     }
                 }
                 else
                 {
-                    var i = 0;
-                    while (PlayersDifference > 0 && mPolyvalentPlayers.Any())
+                    if (PlayersDifference % 2 != 0)
                     {
-                        mAttackingPlayers.Add(mPolyvalentPlayers[i]);
-                        mPolyvalentPlayers.RemoveAt(i);
-                        i++;
+                        mDefendingPlayers.Add(mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)]);
+                    }
+
+                    for (var i = mDefendingPlayers.Count + PlayersDifference; i < mDefendingPlayers.Count - 1; i += 2)
+                    {
+                        Teams.Add(new Team
+                        {
+                            mFirstPlayer = mDefendingPlayers[i],
+                            mSecondPlayer = mDefendingPlayers[i + 1],
+                        });
                     }
                 }
 
-                if (mPolyvalentPlayers.Any() && PlayersDifference == 0)
+                if (Teams.Count % 2 != 0)
                 {
-                    var i = 0;
-                    while (mPolyvalentPlayers.Any())
+                    Teams.Add(new Team
                     {
-                        if (i % 2 == 0)
-                        {
-                            mAttackingPlayers.Add(mPolyvalentPlayers[0]);
-                        }
-                        else
-                        {
-                            mDefendingPlayers.Add(mPolyvalentPlayers[0]);
-                        }
-
-                        mPolyvalentPlayers.RemoveAt(0);
-                        i++;
-                    }
-                }
-            }
-
-            for (var i = 0; i < Math.Min(mDefendingPlayers.Count, mAttackingPlayers.Count); i++)
-            {
-                mTeams.Add(new Team
-                {
-                    mFirstPlayer = mDefendingPlayers[i],
-                    mSecondPlayer = mAttackingPlayers[i],
-                });
-            }
-
-            if (PlayersDifference == 0)
-            {
-                return;
-            }
-
-            if (PlayersDifference > 0)
-            {
-                if (PlayersDifference % 2 != 0)
-                {
-                    mAttackingPlayers.Add(mAttackingPlayers[new Random().Next(0,mAttackingPlayers.Count -1)]);
-                }
-
-                for (var i = mAttackingPlayers.Count - PlayersDifference; i < mAttackingPlayers.Count - 1; i += 2)
-                {
-                    mTeams.Add(new Team
-                    {
-                        mFirstPlayer = mAttackingPlayers[i],
-                        mSecondPlayer = mAttackingPlayers[i + 1],
+                        mFirstPlayer = mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)],
+                        mSecondPlayer = mAttackingPlayers[new Random().Next(0, mAttackingPlayers.Count - 1)],
                     });
                 }
-            }
-            else
-            {
-                if (PlayersDifference % 2 != 0)
-                {
-                    mDefendingPlayers.Add(mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)]);
-                }
 
-                for (var i = mDefendingPlayers.Count + PlayersDifference; i < mDefendingPlayers.Count - 1; i += 2)
-                {
-                    mTeams.Add(new Team
-                    {
-                        mFirstPlayer = mDefendingPlayers[i],
-                        mSecondPlayer = mDefendingPlayers[i + 1],
-                    });
-                }
+                TeamsHaveBeenDrawed = true;
             }
-
-            if (mTeams.Count % 2 != 0)
+            catch
             {
-                mTeams.Add(new Team
-                {
-                    mFirstPlayer = mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)],
-                    mSecondPlayer = mAttackingPlayers[new Random().Next(0, mAttackingPlayers.Count - 1)],
-                });
+                TeamsHaveBeenDrawed = false;
             }
         }
 
@@ -200,24 +235,32 @@ namespace Backend
         /// <summary>
         /// Draws the tournament.
         /// </summary>
-        private void DrawTournament()
+        public void DrawTournament()
         {
-            mTeams.Shuffle();
-
-            var output_file = File.Exists(Utilities.OutputFilePath)
-                ? $"{Utilities.OutputFilePath.Replace(".txt", "")}{DateTime.Now.ToShortDateString()}.txt"
-                : Utilities.OutputFilePath;
-
-            //File.Create(output_file);
-            
-            var output_file_lines = new List<string>();
-
-            for (var i = 0; i < mTeams.Count-1; i+=2)
+            try
             {
-                output_file_lines.Add($"{mTeams[i]} vs {mTeams[i+1]}\n");
-            }
+                Teams.Shuffle();
 
-            File.WriteAllLines(output_file, output_file_lines);
+                var output_file = File.Exists(Utilities.OutputFilePath)
+                    ? $"{Utilities.OutputFilePath.Replace(".txt", "")}{DateTime.Now.ToShortDateString()}.txt"
+                    : Utilities.OutputFilePath;
+
+                var output_file_lines = new List<string>();
+
+                for (var i = 0; i < Teams.Count - 1; i += 2)
+                {
+                    output_file_lines.Add($"{Teams[i]} vs {Teams[i + 1]}\n");
+                }
+
+                File.WriteAllLines(output_file, output_file_lines);
+
+                HasBeenDrawed = true;
+            }
+            catch
+            {
+                HasBeenDrawed = false;
+            }
+            
         }
     }
 }
