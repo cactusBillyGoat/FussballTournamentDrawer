@@ -11,24 +11,65 @@ namespace CampionatFussball
     /// </summary>
     public class Tournament
     {
-        public List<Team> mTeams = new List<Team>();
-        public List<Player> mPlayers;
+        #region Fields
+
+        private List<Team> mTeams = new List<Team>();
+        private List<Player> mPlayers;
+        private List<Player> mDefendingPlayers = new List<Player>();
+        private List<Player> mAttackingPlayers = new List<Player>();
+        private List<Player> mPolyvalentPlayers = new List<Player>();
+
+        #endregion Fields
 
         /// <summary>
         /// Starts the tournament.
         /// </summary>
         public void Start()
         {
-            mPlayers = GetPlayers();
+            PopulatePlayerList();
+            PopulatePlayerPositionsLists();
+            ShufflePlayers();
             DrawTeams();
             DrawTournament();
         }
 
         /// <summary>
-        /// Gets the players.
+        /// Shuffles the player lists
+        /// </summary>
+        private void ShufflePlayers()
+        {
+            mDefendingPlayers.Shuffle();
+            mAttackingPlayers.Shuffle();
+            mPolyvalentPlayers.Shuffle();
+        }
+
+        /// <summary>
+        /// Populates player lists
+        /// </summary>
+        private void PopulatePlayerPositionsLists()
+        {
+            foreach (var player in mPlayers)
+            {
+                switch (player.PreferredPosition)
+                {
+                    case "Attack":
+                        mAttackingPlayers.Add(player);
+                        break;
+                    case "Defend":
+                        mDefendingPlayers.Add(player);
+                        break;
+                    default:
+                        mPolyvalentPlayers.Add(player);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Populates the player list
         /// </summary>
         /// <returns></returns>
-        private List<Player> GetPlayers()
+        private void PopulatePlayerList()
         {
             if (!File.Exists(Utilities.InputFilePath))
             {
@@ -38,11 +79,9 @@ namespace CampionatFussball
 
             var file_lines = File.ReadAllLines(Utilities.InputFilePath);
 
-            var players_list = file_lines.Select(Line => Line.Split(' '))
-                .Select(Values => new Player {mNickName = Values[0], mPreferredPosition = Values[1]})
+            mPlayers = file_lines.Select(Line => Line.Split(' '))
+                .Select(Values => new Player {NickName = Values[0], PreferredPosition = Values[1]})
                 .ToList();
-
-            return players_list;
         }
 
         /// <summary>
@@ -50,66 +89,112 @@ namespace CampionatFussball
         /// </summary>
         private void DrawTeams()
         {
-            var defending_players = new List<Player>();
-            var attacking_players = new List<Player>();
-
-            foreach (var player in mPlayers)
+            if (mPolyvalentPlayers.Any())
             {
-                if (player.mPreferredPosition.Equals("Attack"))
+                if (PlayersDifference < 0 && mPolyvalentPlayers.Any())
                 {
-                    attacking_players.Add(player);
+                    var i = 0;
+                    while (PlayersDifference < 0)
+                    {
+                        mAttackingPlayers.Add(mPolyvalentPlayers[i]);
+                        mPolyvalentPlayers.RemoveAt(i);
+                        i++;
+                    }
                 }
                 else
                 {
-                    defending_players.Add(player);
+                    var i = 0;
+                    while (PlayersDifference > 0 && mPolyvalentPlayers.Any())
+                    {
+                        mAttackingPlayers.Add(mPolyvalentPlayers[i]);
+                        mPolyvalentPlayers.RemoveAt(i);
+                        i++;
+                    }
+                }
+
+                if (mPolyvalentPlayers.Any() && PlayersDifference == 0)
+                {
+                    var i = 0;
+                    while (mPolyvalentPlayers.Any())
+                    {
+                        if (i % 2 == 0)
+                        {
+                            mAttackingPlayers.Add(mPolyvalentPlayers[0]);
+                        }
+                        else
+                        {
+                            mDefendingPlayers.Add(mPolyvalentPlayers[0]);
+                        }
+
+                        mPolyvalentPlayers.RemoveAt(0);
+                        i++;
+                    }
                 }
             }
 
-            defending_players.Shuffle();
-            attacking_players.Shuffle();
-
-
-            for (var i = 0; i < Math.Min(defending_players.Count, attacking_players.Count); i++)
+            for (var i = 0; i < Math.Min(mDefendingPlayers.Count, mAttackingPlayers.Count); i++)
             {
                 mTeams.Add(new Team
                 {
-                    mFirstPlayer = defending_players[i],
-                    mSecondPlayer = attacking_players[i],
+                    mFirstPlayer = mDefendingPlayers[i],
+                    mSecondPlayer = mAttackingPlayers[i],
                 });
             }
 
-
-            var players_difference = defending_players.Count - attacking_players.Count;
-
-            if (players_difference == 0)
+            if (PlayersDifference == 0)
             {
                 return;
             }
 
-            if (players_difference < 0)
+            if (PlayersDifference > 0)
             {
-                players_difference = Math.Abs(players_difference);
+                if (PlayersDifference % 2 != 0)
+                {
+                    mAttackingPlayers.Add(mAttackingPlayers[new Random().Next(0,mAttackingPlayers.Count -1)]);
+                }
 
-                for (var i = attacking_players.Count - players_difference; i < attacking_players.Count - 1; i += 2)
+                for (var i = mAttackingPlayers.Count - PlayersDifference; i < mAttackingPlayers.Count - 1; i += 2)
                 {
                     mTeams.Add(new Team
                     {
-                        mFirstPlayer = attacking_players[i],
-                        mSecondPlayer = attacking_players[i + 1],
+                        mFirstPlayer = mAttackingPlayers[i],
+                        mSecondPlayer = mAttackingPlayers[i + 1],
                     });
                 }
             }
             else
             {
-                for (var i = defending_players.Count - players_difference; i < defending_players.Count - 1; i += 2)
+                if (PlayersDifference % 2 != 0)
+                {
+                    mDefendingPlayers.Add(mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)]);
+                }
+
+                for (var i = mDefendingPlayers.Count + PlayersDifference; i < mDefendingPlayers.Count - 1; i += 2)
                 {
                     mTeams.Add(new Team
                     {
-                        mFirstPlayer = defending_players[i],
-                        mSecondPlayer = defending_players[i + 1],
+                        mFirstPlayer = mDefendingPlayers[i],
+                        mSecondPlayer = mDefendingPlayers[i + 1],
                     });
                 }
             }
+
+            if (mTeams.Count % 2 != 0)
+            {
+                mTeams.Add(new Team
+                {
+                    mFirstPlayer = mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)],
+                    mSecondPlayer = mAttackingPlayers[new Random().Next(0, mAttackingPlayers.Count - 1)],
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets the players difference
+        /// </summary>
+        private int PlayersDifference
+        {
+            get { return mAttackingPlayers.Count - mDefendingPlayers.Count; }
         }
 
         /// <summary>

@@ -5,8 +5,8 @@
     /// </summary>
     public class Player
     {
-        public string mPreferredPosition;
-        public string mNickName;
+        public string PreferredPosition;
+        public string NickName;
 
         /// <summary>
         /// Converts to string.
@@ -16,7 +16,7 @@
         /// </returns>
         public override string ToString()
         {
-            return mNickName;
+            return NickName;
         }
     }
 }
