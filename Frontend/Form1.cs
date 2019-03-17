@@ -17,7 +17,9 @@ namespace Frontend
 
         private void PlayersButton_Click(object sender, EventArgs e)
         {
-
+            FirstPagePanel.Visible = false;
+            SecondPagePanel.Visible = true;
+            GC.Collect();
         }
 
         private void DrawTournamentButton_Click(object sender, EventArgs e)
@@ -69,7 +71,25 @@ namespace Frontend
 
         private void RestartButton_Click(object sender, EventArgs e)
         {
+            GC.Collect();
             Application.Restart();
+        }
+
+        private void SecondPagePanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void FirstPagePanel_Paint(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            FirstPagePanel.Visible = true;
+            SecondPagePanel.Visible = false;
+            GC.Collect();
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace Frontend
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Frontend
 {
     partial class Form1
     {
@@ -34,6 +37,13 @@
             this.DrawTeamButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.RestartButton = new System.Windows.Forms.Button();
+            this.FirstPagePanel = new System.Windows.Forms.Panel();
+            this.SecondPagePanel = new System.Windows.Forms.Panel();
+            this.BackButton = new System.Windows.Forms.Button();
+            this.PlayersListBox = new System.Windows.Forms.ListBox();
+            this.PlayersTextBox = new System.Windows.Forms.TextBox();
+            this.FirstPagePanel.SuspendLayout();
+            this.SecondPagePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // DrawTournamentButton
@@ -104,21 +114,75 @@
             this.RestartButton.UseVisualStyleBackColor = true;
             this.RestartButton.Click += new System.EventHandler(this.RestartButton_Click);
             // 
+            // FirstPagePanel
+            // 
+            this.FirstPagePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("FirstPagePanel.BackgroundImage")));
+            this.FirstPagePanel.Controls.Add(this.RestartButton);
+            this.FirstPagePanel.Controls.Add(this.ExitButton);
+            this.FirstPagePanel.Controls.Add(this.DrawTeamButton);
+            this.FirstPagePanel.Controls.Add(this.PlayersButton);
+            this.FirstPagePanel.Controls.Add(this.DrawTournamentButton);
+            this.FirstPagePanel.Location = new System.Drawing.Point(-1, -1);
+            this.FirstPagePanel.Name = "FirstPagePanel";
+            this.FirstPagePanel.Size = new System.Drawing.Size(1264, 692);
+            this.FirstPagePanel.TabIndex = 7;
+            this.FirstPagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.FirstPagePanel_Paint);
+            // 
+            // SecondPagePanel
+            // 
+            this.SecondPagePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SecondPagePanel.BackgroundImage")));
+            this.SecondPagePanel.Controls.Add(this.BackButton);
+            this.SecondPagePanel.Controls.Add(this.PlayersListBox);
+            this.SecondPagePanel.Location = new System.Drawing.Point(-1, -1);
+            this.SecondPagePanel.Name = "SecondPagePanel";
+            this.SecondPagePanel.Size = new System.Drawing.Size(1264, 692);
+            this.SecondPagePanel.TabIndex = 8;
+            this.SecondPagePanel.Visible = false;
+            this.SecondPagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.SecondPagePanel_Paint);
+            // 
+            // BackButton
+            // 
+            this.BackButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.BackButton.Location = new System.Drawing.Point(1077, 601);
+            this.BackButton.Name = "BackButton";
+            this.BackButton.Size = new System.Drawing.Size(166, 64);
+            this.BackButton.TabIndex = 5;
+            this.BackButton.Text = "Back";
+            this.BackButton.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
+            this.BackButton.UseVisualStyleBackColor = true;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
+            // 
+            // PlayersListBox
+            // 
+            this.PlayersListBox.BackColor = System.Drawing.Color.White;
+            this.PlayersListBox.Location = new System.Drawing.Point(12, 90);
+            this.PlayersListBox.MultiColumn = true;
+            this.PlayersListBox.Name = "PlayersListBox";
+            this.PlayersListBox.Size = new System.Drawing.Size(400, 576);
+            this.PlayersListBox.TabIndex = 6;
+            this.PlayersListBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("DrawTournamentButton.list_box")));
+            // 
+            // PlayersTextBox
+            // 
+            this.PlayersTextBox.Location = new System.Drawing.Point(0, 0);
+            this.PlayersTextBox.Name = "PlayersTextBox";
+            this.PlayersTextBox.Size = new System.Drawing.Size(100, 20);
+            this.PlayersTextBox.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1264, 681);
-            this.Controls.Add(this.RestartButton);
-            this.Controls.Add(this.ExitButton);
-            this.Controls.Add(this.DrawTeamButton);
-            this.Controls.Add(this.PlayersButton);
-            this.Controls.Add(this.DrawTournamentButton);
+            this.Controls.Add(this.SecondPagePanel);
+            this.Controls.Add(this.FirstPagePanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Draw foosball tournament";
+            this.FirstPagePanel.ResumeLayout(false);
+            this.SecondPagePanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -130,6 +194,11 @@
         private System.Windows.Forms.Button DrawTeamButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.Button RestartButton;
+        private System.Windows.Forms.Panel FirstPagePanel;
+        private System.Windows.Forms.Panel SecondPagePanel;
+        private System.Windows.Forms.ListBox PlayersListBox;
+        private System.Windows.Forms.Button BackButton;
+        private System.Windows.Forms.TextBox PlayersTextBox;
     }
 }
 
