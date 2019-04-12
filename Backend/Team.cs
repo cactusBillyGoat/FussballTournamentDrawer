@@ -16,7 +16,7 @@
         /// </returns>
         public override string ToString()
         {
-            return $"[{mFirstPlayer} & {mSecondPlayer}]";
+            return $"[{mFirstPlayer.ToShortString()} & {mSecondPlayer.ToShortString()}]";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using CampionatFussball;
 
 namespace Backend
 {
@@ -41,6 +42,25 @@ namespace Backend
                 var application_folder = full_path.Replace(@"\CampionatFussball.exe", "");
 
                 return $@"{application_folder}\Utilities\Tournament.txt";
+            }
+        }
+
+        /// <summary>
+        /// Gets the players styles list.
+        /// </summary>
+        /// <value>
+        /// The players styles list.
+        /// </value>
+        public static List<Enums.PlayerStyle> PlayersStylesList
+        {
+            get
+            {
+                return new List<Enums.PlayerStyle>
+                {
+                    Enums.PlayerStyle.Attack,
+                    Enums.PlayerStyle.Defend,
+                    Enums.PlayerStyle.Polyvalent
+                };
             }
         }
 

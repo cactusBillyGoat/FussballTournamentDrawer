@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using CampionatFussball;
 
 namespace Backend
 {
@@ -13,50 +12,124 @@ namespace Backend
     {
         #region Fields
 
-        public List<Team> Teams = new List<Team>();
-        public List<Player> Players = new List<Player>();
-        private List<Player> mDefendingPlayers = new List<Player>();
-        private List<Player> mAttackingPlayers = new List<Player>();
-        private List<Player> mPolyvalentPlayers = new List<Player>();
+        private readonly List<Team> mTeams = new List<Team>();
+        private readonly List<Player> mDefendingPlayers = new List<Player>();
+        private readonly List<Player> mAttackingPlayers = new List<Player>();
+        private readonly List<Player> mPolyvalentPlayers = new List<Player>();
 
         #endregion Fields
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance has been drawed.
+        /// Gets or sets a value indicating whether this instance has been drawn.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance has been drawed; otherwise, <c>false</c>.
+        ///   <c>true</c> if this instance has been drawn; otherwise, <c>false</c>.
         /// </value>
-        public bool HasBeenDrawed
+        public bool HasBeenDrawn
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [teams have been drawed].
+        /// Gets or sets a value indicating whether [teams have been drawn].
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [teams have been drawed]; otherwise, <c>false</c>.
+        ///   <c>true</c> if [teams have been drawn]; otherwise, <c>false</c>.
         /// </value>
-        public bool TeamsHaveBeenDrawed
+        public bool TeamsHaveBeenDrawn
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets the players difference
+        /// </summary>
+        private int PlayersDifference => mAttackingPlayers.Count - mDefendingPlayers.Count;
+
+        /// <summary>
+        /// Gets the players.
+        /// </summary>
+        /// <value>
+        /// The players.
+        /// </value>
+        public List<Player> Players { get; } = new List<Player>();
+
+        /// <summary>
+        /// Gets a value indicating whether [any players].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [any players]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AnyPlayers => Players.Any();
+
+        /// <summary>
+        /// Gets a value indicating whether [any teams].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [any teams]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AnyTeams => mTeams.Any();
+
+        /// <summary>
+        /// Gets the tree.
+        /// </summary>
+        /// <value>
+        /// The tree.
+        /// </value>
+        public List<string> Tree
+        {
+            get;
+            private set;
         }
 
         #endregion Properties
 
         /// <summary>
-        /// Starts the tournament.
+        /// Adds the player.
         /// </summary>
-        public void PopulateAndSufflePlayers()
+        /// <param name="Player">The player.</param>
+        public void AddPlayer(Player Player)
         {
-            PopulatePlayerList();
-            PopulatePlayerPositionsLists();
-            ShufflePlayers();
+            Players.Add(Player);
+        }
+
+        /// <summary>
+        /// Edits the player.
+        /// </summary>
+        /// <param name="Player">The player.</param>
+        /// <param name="NewNickName">New name of the nick.</param>
+        /// <param name="NewPreferredPosition">The new preferred position.</param>
+        public void EditPlayer(Player Player, string NewNickName, Enums.PlayerStyle NewPreferredPosition)
+        {
+            foreach (var player in Players)
+            {
+                if (!player.Equals(Player)) continue;
+
+                player.NickName = NewNickName;
+                player.PreferredPosition = NewPreferredPosition;
+
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Deletes the player.
+        /// </summary>
+        /// <param name="Player">The player.</param>
+        public void DeletePlayer(Player Player)
+        {
+            foreach (var player in Players)
+            {
+                if (!player.Equals(Player)) continue;
+
+                Players.Remove(player);
+
+                return;
+            }
         }
 
         /// <summary>
@@ -78,36 +151,19 @@ namespace Backend
             {
                 switch (player.PreferredPosition)
                 {
-                    case "Attack":
+                    case Enums.PlayerStyle.Attack:
                         mAttackingPlayers.Add(player);
                         break;
-                    case "Defend":
+                    case Enums.PlayerStyle.Defend:
                         mDefendingPlayers.Add(player);
                         break;
-                    default:
+                    case Enums.PlayerStyle.Polyvalent:
                         mPolyvalentPlayers.Add(player);
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"{player.PreferredPosition} is not a valid preferred position!");
                 }
             }
-        }
-
-        /// <summary>
-        /// Populates the player list
-        /// </summary>
-        /// <returns></returns>
-        private void PopulatePlayerList()
-        {
-            if (!File.Exists(Utilities.InputFilePath))
-            {
-                MessageBox.Show($"Please first create {Utilities.InputFilePath} file", "Players file not found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new FileNotFoundException();
-            }
-
-            var file_lines = File.ReadAllLines(Utilities.InputFilePath);
-
-            Players = file_lines.Select(Line => Line.Split(' '))
-                .Select(Values => new Player {NickName = Values[0], PreferredPosition = Values[1]})
-                .ToList();
         }
 
         /// <summary>
@@ -115,6 +171,9 @@ namespace Backend
         /// </summary>
         public void DrawTeams()
         {
+            PopulatePlayerPositionsLists();
+            ShufflePlayers();
+
             try
             {
                 if (mPolyvalentPlayers.Any())
@@ -162,7 +221,7 @@ namespace Backend
 
                 for (var i = 0; i < Math.Min(mDefendingPlayers.Count, mAttackingPlayers.Count); i++)
                 {
-                    Teams.Add(new Team
+                    mTeams.Add(new Team
                     {
                         mFirstPlayer = mDefendingPlayers[i],
                         mSecondPlayer = mAttackingPlayers[i],
@@ -183,7 +242,7 @@ namespace Backend
 
                     for (var i = mAttackingPlayers.Count - PlayersDifference; i < mAttackingPlayers.Count - 1; i += 2)
                     {
-                        Teams.Add(new Team
+                        mTeams.Add(new Team
                         {
                             mFirstPlayer = mAttackingPlayers[i],
                             mSecondPlayer = mAttackingPlayers[i + 1],
@@ -199,7 +258,7 @@ namespace Backend
 
                     for (var i = mDefendingPlayers.Count + PlayersDifference; i < mDefendingPlayers.Count - 1; i += 2)
                     {
-                        Teams.Add(new Team
+                        mTeams.Add(new Team
                         {
                             mFirstPlayer = mDefendingPlayers[i],
                             mSecondPlayer = mDefendingPlayers[i + 1],
@@ -207,29 +266,21 @@ namespace Backend
                     }
                 }
 
-                if (Teams.Count % 2 != 0)
+                if (mTeams.Count % 2 != 0)
                 {
-                    Teams.Add(new Team
+                    mTeams.Add(new Team
                     {
                         mFirstPlayer = mDefendingPlayers[new Random().Next(0, mDefendingPlayers.Count - 1)],
                         mSecondPlayer = mAttackingPlayers[new Random().Next(0, mAttackingPlayers.Count - 1)],
                     });
                 }
 
-                TeamsHaveBeenDrawed = true;
+                TeamsHaveBeenDrawn = true;
             }
             catch
             {
-                TeamsHaveBeenDrawed = false;
+                TeamsHaveBeenDrawn = false;
             }
-        }
-
-        /// <summary>
-        /// Gets the players difference
-        /// </summary>
-        private int PlayersDifference
-        {
-            get { return mAttackingPlayers.Count - mDefendingPlayers.Count; }
         }
 
         /// <summary>
@@ -239,26 +290,18 @@ namespace Backend
         {
             try
             {
-                Teams.Shuffle();
-
-                var output_file = File.Exists(Utilities.OutputFilePath)
-                    ? $"{Utilities.OutputFilePath.Replace(".txt", "")}{DateTime.Now.ToShortDateString()}.txt"
-                    : Utilities.OutputFilePath;
-
-                var output_file_lines = new List<string>();
-
-                for (var i = 0; i < Teams.Count - 1; i += 2)
+                mTeams.Shuffle();
+                Tree = new List<string>();
+                for (var i = 0; i < mTeams.Count - 1; i += 2)
                 {
-                    output_file_lines.Add($"{Teams[i]} vs {Teams[i + 1]}\n");
+                    Tree.Add($"{mTeams[i]} vs {mTeams[i + 1]}\n");
                 }
 
-                File.WriteAllLines(output_file, output_file_lines);
-
-                HasBeenDrawed = true;
+                HasBeenDrawn = true;
             }
             catch
             {
-                HasBeenDrawed = false;
+                HasBeenDrawn = false;
             }
             
         }

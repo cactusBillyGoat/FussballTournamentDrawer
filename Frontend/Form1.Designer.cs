@@ -39,16 +39,22 @@ namespace Frontend
             this.RestartButton = new System.Windows.Forms.Button();
             this.FirstPagePanel = new System.Windows.Forms.Panel();
             this.SecondPagePanel = new System.Windows.Forms.Panel();
+            this.DeleteButton = new System.Windows.Forms.Button();
+            this.EditButton = new System.Windows.Forms.Button();
             this.BackButton = new System.Windows.Forms.Button();
             this.PlayersListBox = new System.Windows.Forms.ListBox();
             this.PlayersTextBox = new System.Windows.Forms.TextBox();
+            this.PlayerStyleComboBox = new System.Windows.Forms.ComboBox();
+            this.AddButton = new System.Windows.Forms.Button();
+            this.NoNickNameErrorLabel = new System.Windows.Forms.Label();
+            this.APlayerWithThisNameAlreadyAddedLabel = new System.Windows.Forms.Label();
+            this.ConfirmButton = new System.Windows.Forms.Button();
             this.FirstPagePanel.SuspendLayout();
             this.SecondPagePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // DrawTournamentButton
             // 
-            this.DrawTournamentButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("DrawTournamentButton.BackgroundImage")));
             this.DrawTournamentButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.DrawTournamentButton.Location = new System.Drawing.Point(857, 277);
             this.DrawTournamentButton.Name = "DrawTournamentButton";
@@ -61,8 +67,6 @@ namespace Frontend
             // 
             // PlayersButton
             // 
-            this.PlayersButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PlayersButton.BackgroundImage")));
-            this.PlayersButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.PlayersButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.PlayersButton.Location = new System.Drawing.Point(195, 275);
             this.PlayersButton.Name = "PlayersButton";
@@ -75,10 +79,7 @@ namespace Frontend
             // 
             // DrawTeamButton
             // 
-            this.DrawTeamButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("DrawTeamButton.BackgroundImage")));
-            this.DrawTeamButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.DrawTeamButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
-            this.DrawTeamButton.ForeColor = System.Drawing.Color.SaddleBrown;
             this.DrawTeamButton.Location = new System.Drawing.Point(531, 277);
             this.DrawTeamButton.Name = "DrawTeamButton";
             this.DrawTeamButton.Size = new System.Drawing.Size(158, 68);
@@ -131,14 +132,44 @@ namespace Frontend
             // SecondPagePanel
             // 
             this.SecondPagePanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SecondPagePanel.BackgroundImage")));
+            this.SecondPagePanel.Controls.Add(this.ConfirmButton);
+            this.SecondPagePanel.Controls.Add(this.DeleteButton);
+            this.SecondPagePanel.Controls.Add(this.EditButton);
             this.SecondPagePanel.Controls.Add(this.BackButton);
             this.SecondPagePanel.Controls.Add(this.PlayersListBox);
+            this.SecondPagePanel.Controls.Add(this.PlayersTextBox);
+            this.SecondPagePanel.Controls.Add(this.PlayerStyleComboBox);
+            this.SecondPagePanel.Controls.Add(this.AddButton);
+            this.SecondPagePanel.Controls.Add(this.NoNickNameErrorLabel);
+            this.SecondPagePanel.Controls.Add(this.APlayerWithThisNameAlreadyAddedLabel);
             this.SecondPagePanel.Location = new System.Drawing.Point(-1, -1);
             this.SecondPagePanel.Name = "SecondPagePanel";
             this.SecondPagePanel.Size = new System.Drawing.Size(1264, 692);
             this.SecondPagePanel.TabIndex = 8;
             this.SecondPagePanel.Visible = false;
             this.SecondPagePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.SecondPagePanel_Paint);
+            // 
+            // DeleteButton
+            // 
+            this.DeleteButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.DeleteButton.Location = new System.Drawing.Point(794, 447);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(117, 42);
+            this.DeleteButton.TabIndex = 12;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+            // 
+            // EditButton
+            // 
+            this.EditButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.EditButton.Location = new System.Drawing.Point(649, 447);
+            this.EditButton.Name = "EditButton";
+            this.EditButton.Size = new System.Drawing.Size(117, 42);
+            this.EditButton.TabIndex = 11;
+            this.EditButton.Text = "Edit";
+            this.EditButton.UseVisualStyleBackColor = true;
+            this.EditButton.Click += new System.EventHandler(this.EditButton_Click);
             // 
             // BackButton
             // 
@@ -155,19 +186,82 @@ namespace Frontend
             // PlayersListBox
             // 
             this.PlayersListBox.BackColor = System.Drawing.Color.White;
-            this.PlayersListBox.Location = new System.Drawing.Point(12, 90);
-            this.PlayersListBox.MultiColumn = true;
+            this.PlayersListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.PlayersListBox.ItemHeight = 37;
+            this.PlayersListBox.Location = new System.Drawing.Point(12, 36);
             this.PlayersListBox.Name = "PlayersListBox";
-            this.PlayersListBox.Size = new System.Drawing.Size(400, 576);
+            this.PlayersListBox.Size = new System.Drawing.Size(400, 559);
             this.PlayersListBox.TabIndex = 6;
-            this.PlayersListBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("DrawTournamentButton.list_box")));
             // 
             // PlayersTextBox
             // 
-            this.PlayersTextBox.Location = new System.Drawing.Point(0, 0);
+            this.PlayersTextBox.BackColor = System.Drawing.Color.Azure;
+            this.PlayersTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.PlayersTextBox.Location = new System.Drawing.Point(500, 200);
+            this.PlayersTextBox.Multiline = true;
             this.PlayersTextBox.Name = "PlayersTextBox";
-            this.PlayersTextBox.Size = new System.Drawing.Size(100, 20);
-            this.PlayersTextBox.TabIndex = 0;
+            this.PlayersTextBox.Size = new System.Drawing.Size(205, 59);
+            this.PlayersTextBox.TabIndex = 7;
+            this.PlayersTextBox.Text = "Nickname";
+            this.PlayersTextBox.GotFocus += new System.EventHandler(this.PlayersTextBox_GotFocus);
+            this.PlayersTextBox.LostFocus += new System.EventHandler(this.PlayersTextBox_LostFocus);
+            // 
+            // PlayerStyleComboBox
+            // 
+            this.PlayerStyleComboBox.BackColor = System.Drawing.Color.Azure;
+            this.PlayerStyleComboBox.DataSource = ((object)(resources.GetObject("PlayerStyleComboBox.DataSource")));
+            this.PlayerStyleComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.PlayerStyleComboBox.Location = new System.Drawing.Point(500, 150);
+            this.PlayerStyleComboBox.Name = "PlayerStyleComboBox";
+            this.PlayerStyleComboBox.Size = new System.Drawing.Size(205, 45);
+            this.PlayerStyleComboBox.TabIndex = 8;
+            // 
+            // AddButton
+            // 
+            this.AddButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.AddButton.Location = new System.Drawing.Point(500, 447);
+            this.AddButton.Name = "AddButton";
+            this.AddButton.Size = new System.Drawing.Size(117, 42);
+            this.AddButton.TabIndex = 9;
+            this.AddButton.Text = "Add player";
+            this.AddButton.UseVisualStyleBackColor = true;
+            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
+            // 
+            // NoNickNameErrorLabel
+            // 
+            this.NoNickNameErrorLabel.BackColor = System.Drawing.Color.Transparent;
+            this.NoNickNameErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.NoNickNameErrorLabel.ForeColor = System.Drawing.Color.Red;
+            this.NoNickNameErrorLabel.Location = new System.Drawing.Point(503, 262);
+            this.NoNickNameErrorLabel.Name = "NoNickNameErrorLabel";
+            this.NoNickNameErrorLabel.Size = new System.Drawing.Size(628, 64);
+            this.NoNickNameErrorLabel.TabIndex = 10;
+            this.NoNickNameErrorLabel.Text = "Please add a nickname before adding a player!";
+            this.NoNickNameErrorLabel.Visible = false;
+            // 
+            // APlayerWithThisNameAlreadyAddedLabel
+            // 
+            this.APlayerWithThisNameAlreadyAddedLabel.BackColor = System.Drawing.Color.Transparent;
+            this.APlayerWithThisNameAlreadyAddedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.APlayerWithThisNameAlreadyAddedLabel.ForeColor = System.Drawing.Color.Red;
+            this.APlayerWithThisNameAlreadyAddedLabel.Location = new System.Drawing.Point(503, 262);
+            this.APlayerWithThisNameAlreadyAddedLabel.Name = "NoNickNameErrorLabel";
+            this.APlayerWithThisNameAlreadyAddedLabel.Size = new System.Drawing.Size(628, 64);
+            this.APlayerWithThisNameAlreadyAddedLabel.TabIndex = 10;
+            this.APlayerWithThisNameAlreadyAddedLabel.Text = "A player with this name already added!";
+            this.APlayerWithThisNameAlreadyAddedLabel.Visible = false;
+            // 
+            // ConfirmButton
+            // 
+            this.ConfirmButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
+            this.ConfirmButton.Location = new System.Drawing.Point(649, 516);
+            this.ConfirmButton.Name = "ConfirmButton";
+            this.ConfirmButton.Size = new System.Drawing.Size(117, 42);
+            this.ConfirmButton.TabIndex = 13;
+            this.ConfirmButton.Text = "Confirm";
+            this.ConfirmButton.UseVisualStyleBackColor = true;
+            this.ConfirmButton.Visible = false;
+            this.ConfirmButton.Click += new System.EventHandler(this.ConfirmButton_Click);
             // 
             // Form1
             // 
@@ -183,6 +277,7 @@ namespace Frontend
             this.Text = "Draw foosball tournament";
             this.FirstPagePanel.ResumeLayout(false);
             this.SecondPagePanel.ResumeLayout(false);
+            this.SecondPagePanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -199,6 +294,13 @@ namespace Frontend
         private System.Windows.Forms.ListBox PlayersListBox;
         private System.Windows.Forms.Button BackButton;
         private System.Windows.Forms.TextBox PlayersTextBox;
+        private System.Windows.Forms.ComboBox PlayerStyleComboBox;
+        private System.Windows.Forms.Button AddButton;
+        private System.Windows.Forms.Label NoNickNameErrorLabel;
+        private System.Windows.Forms.Label APlayerWithThisNameAlreadyAddedLabel;
+        private Button EditButton;
+        private Button DeleteButton;
+        private Button ConfirmButton;
     }
 }
 
