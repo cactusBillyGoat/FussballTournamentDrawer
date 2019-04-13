@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CampionatFussball;
 
@@ -16,6 +17,7 @@ namespace Backend
         private readonly List<Player> mDefendingPlayers = new List<Player>();
         private readonly List<Player> mAttackingPlayers = new List<Player>();
         private readonly List<Player> mPolyvalentPlayers = new List<Player>();
+        private readonly List<Player> mPlayersFromDb = new List<Player>();
 
         #endregion Fields
 
@@ -57,6 +59,40 @@ namespace Backend
         /// The players.
         /// </value>
         public List<Player> Players { get; } = new List<Player>();
+
+        /// <summary>
+        /// Gets the players from database.
+        /// </summary>
+        /// <value>
+        /// The players from database.
+        /// </value>
+        public List<Player> PlayersFromDb
+        {
+            get
+            {
+                if (mPlayersFromDb.Any())
+                {
+                    return mPlayersFromDb;
+                }
+
+                var file_lines = File.ReadAllLines(Utilities.DataBaseFilePath);
+
+                foreach (var line in file_lines)
+                {
+                    var words = line.Split(' ');
+
+                    Enum.TryParse(words[words.Length - 1], out Enums.PlayerStyle player_style);
+
+                    var nick_name = line.Replace(words[words.Length - 1], string.Empty);
+
+                    nick_name = nick_name.Replace(" ", string.Empty);
+
+                    mPlayersFromDb.Add(new Player(nick_name, player_style));
+                }
+
+                return mPlayersFromDb;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether [any players].
@@ -230,6 +266,7 @@ namespace Backend
 
                 if (PlayersDifference == 0)
                 {
+                    TeamsHaveBeenDrawn = true;
                     return;
                 }
 
@@ -279,6 +316,7 @@ namespace Backend
             }
             catch
             {
+                mTeams.Clear();
                 TeamsHaveBeenDrawn = false;
             }
         }
@@ -294,16 +332,16 @@ namespace Backend
                 Tree = new List<string>();
                 for (var i = 0; i < mTeams.Count - 1; i += 2)
                 {
-                    Tree.Add($"{mTeams[i]} vs {mTeams[i + 1]}\n");
+                    Tree.Add($"{mTeams[i]} vs {mTeams[i + 1]}");
                 }
 
                 HasBeenDrawn = true;
             }
             catch
             {
+                Tree.Clear();
                 HasBeenDrawn = false;
             }
-            
         }
     }
 }

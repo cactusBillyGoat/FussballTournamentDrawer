@@ -13,14 +13,13 @@ namespace Backend
         /// <value>
         /// The input file path.
         /// </value>
-        public static string InputFilePath
+        public static string DataBaseFilePath
         {
             get
             {
                 var process = Process.GetCurrentProcess();
                 var full_path = process.MainModule.FileName;
-
-                var application_folder = full_path.Replace(@"\CampionatFussball.exe", "");
+                var application_folder = full_path.Replace(@"\Frontend.exe", "");
 
                 return $@"{application_folder}\Utilities\Players.txt";
             }
@@ -51,18 +50,13 @@ namespace Backend
         /// <value>
         /// The players styles list.
         /// </value>
-        public static List<Enums.PlayerStyle> PlayersStylesList
-        {
-            get
+        public static List<Enums.PlayerStyle> PlayersStylesList =>
+            new List<Enums.PlayerStyle>
             {
-                return new List<Enums.PlayerStyle>
-                {
-                    Enums.PlayerStyle.Attack,
-                    Enums.PlayerStyle.Defend,
-                    Enums.PlayerStyle.Polyvalent
-                };
-            }
-        }
+                Enums.PlayerStyle.Attack,
+                Enums.PlayerStyle.Defend,
+                Enums.PlayerStyle.Polyvalent
+            };
 
         /// <summary>
         /// Shuffles the specified list.
